@@ -1,0 +1,10 @@
+command:
+    agent:
+        portal:
+            receiver:
+                base: agent
+                mixins: [portal]
+
+            transmitter:
+                base: agent
+                mixins: [portal]

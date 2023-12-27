@@ -1,0 +1,44 @@
+command_mixins:
+    portal:
+        class: PortalCommandMixin
+        parameters:
+            portal:
+                parser: variable
+                type: str
+                optional: "--portal"
+                default: "@settings.DEFAULT_PORTAL"
+                help: "Portal API identifier"
+                value_label: NAME
+                tags: [portal]
+            portals:
+                parser: variables
+                type: str
+                optional: "--portals"
+                default: "@settings.DEFAULT_PORTAL"
+                help: "Comma separated list of Portal API identifiers"
+                value_label: NAME
+                tags: [portal]
+
+    portal_event:
+        class: PortalEventCommandMixin
+        mixins: [portal]
+        parameters:
+            event_fields:
+                parser: fields
+                default: {}
+                optional: true
+                tags: [event]
+
+command_base:
+    portal:
+        mixins: [portal]
+        server_enabled: true
+        groups_allowed: [data-admin]
+
+    portal_event:
+        mixins: [portal_event]
+        server_enabled: false
+        groups_allowed: [data-admin]
+        parse:
+            - portal
+            - event_fields
