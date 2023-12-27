@@ -10,7 +10,7 @@ import base64
 class PortalCommandMixin(CommandMixin('portal')):
 
     def get_portals(self, name_only = True):
-        return Portal.iterate(self, name_only)
+        return list(Portal.iterate(self, name_only))
 
     def get_portal(self, name = None):
         if not name:
