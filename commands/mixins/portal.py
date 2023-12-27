@@ -2,7 +2,6 @@ from django.conf import settings
 
 from systems.commands.index import CommandMixin
 from utility.portal import Portal, PortalConnectionError
-from utility.web import WebParser
 from utility.temp import temp_dir
 
 import base64
@@ -73,11 +72,4 @@ class PortalCommandMixin(CommandMixin('portal')):
 
             except ProviderError as e:
                 pass
-        return text
-
-    def parse_web_text(self, webpage_url):
-        text = ''
-        parser = WebParser(webpage_url)
-        if parser.text:
-            text = parser.text
         return text
