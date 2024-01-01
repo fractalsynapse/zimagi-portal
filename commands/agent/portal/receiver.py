@@ -31,7 +31,8 @@ class Receiver(Agent('portal.receiver')):
             options = {
                 'portal': portal_name,
                 'event_fields': event_data,
-                'async_exec': True
+                'async_exec': True,
+                'verbosity': self.verbosity
             }
         )
         self.send('agent:portal:receiver:event', {
