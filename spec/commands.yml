@@ -23,10 +23,16 @@ command_mixins:
         class: PortalEventCommandMixin
         mixins: [portal]
         parameters:
+            event_id:
+                parser: variable
+                type: str
+                optional: false
+                help: "Event ID"
+                value_label: ID
+                tags: [event]
             event_fields:
                 parser: fields
-                default: {}
-                optional: true
+                optional: false
                 tags: [event]
 
 command_base:
@@ -41,4 +47,5 @@ command_base:
         groups_allowed: [data-admin]
         parse:
             - portal
+            - event_id
             - event_fields
