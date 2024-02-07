@@ -5,6 +5,7 @@ from utility.portal import Portal, PortalConnectionError
 from utility.temp import temp_dir
 
 import base64
+import string
 
 
 class PortalCommandMixin(CommandMixin('portal')):
@@ -59,7 +60,9 @@ class PortalCommandMixin(CommandMixin('portal')):
 
 
     def parse_file_text(self, portal_name, data_type, file_id):
+        printable = set(string.printable)
         text = ''
+
         with temp_dir() as temp:
             file = self.portal_retrieve(portal_name, data_type, file_id)
             file_type = file['file'].split('.')[-1].lower()
@@ -68,7 +71,7 @@ class PortalCommandMixin(CommandMixin('portal')):
                 parser = self.manager.get_provider('file_parser', file_type)
                 file_text = parser.parse(file_path)
                 if file_text:
-                    text = file_text
+                    text = ''.join(filter(lambda x: x in printable, file_text))
 
             except ProviderError as e:
                 pass
