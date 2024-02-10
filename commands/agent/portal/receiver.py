@@ -13,6 +13,7 @@ class Receiver(Agent('portal.receiver')):
         self.run_exclusive('portal_receiver', self._request_events,
             timeout = self.get_config('portal_receiver_lock_timeout', 10)
         )
+        self.sleep(1)
 
     def _request_events(self):
         for portal_name in self.get_portals():
