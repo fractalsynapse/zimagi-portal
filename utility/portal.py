@@ -2,6 +2,7 @@ from django.conf import settings
 
 from .data import load_json, dump_json
 
+import time
 import requests
 import logging
 
@@ -38,15 +39,24 @@ class Portal(object):
         }
 
 
+    def _request(self, method, path, *args, **kwargs):
+        wait_sec = 1
+        while True:
+            response = getattr(requests, method)(path, *args, **kwargs)
+            if response.status_code != 429:
+                return response
+            time.sleep(min((wait_sec * 2), 300))
+
+
     def _get(self, path, params = None):
-        return requests.get(
+        return self._request('get',
             "{}/{}/".format(self.base_url, path),
             headers = self.headers,
             params = params
         )
 
     def _post(self, path, data, files = None):
-        return requests.post(
+        return self._request('post',
             "{}/{}/".format(self.base_url, path),
             headers = self.headers,
             data = dump_json(data),
@@ -54,7 +64,7 @@ class Portal(object):
         )
 
     def _put(self, path, data, files = None):
-        return requests.put(
+        return self._request('put',
             "{}/{}/".format(self.base_url, path),
             headers = self.headers,
             data = dump_json(data),
@@ -62,7 +72,7 @@ class Portal(object):
         )
 
     def _patch(self, path, data, files = None):
-        return requests.patch(
+        return self._request('patch',
             "{}/{}/".format(self.base_url, path),
             headers = self.headers,
             data = dump_json(data),
@@ -70,7 +80,7 @@ class Portal(object):
         )
 
     def _delete(self, path):
-        return requests.delete(
+        return self._request('delete',
             "{}/{}/".format(self.base_url, path),
             headers = self.headers
         )
