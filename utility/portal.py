@@ -1,6 +1,6 @@
 from django.conf import settings
 
-from .data import load_json, dump_json
+from .data import Collection, load_json, dump_json
 
 import time
 import requests
@@ -20,9 +20,9 @@ class PortalConnectionError(Exception):
 class Portal(object):
 
     @classmethod
-    def iterate(cls, command, name_only = True):
+    def iterate(cls, command):
         for name in settings.PORTAL.keys():
-            yield name if name_only else cls(command, name)
+            yield cls(command, name)
 
 
     def __init__(self, command, name):
@@ -37,6 +37,13 @@ class Portal(object):
             'Authorization': "Token {}".format(settings.PORTAL[name]['token']),
             'Content-type': 'application/json'
         }
+
+        self._config = Collection(**settings.PORTAL[name])
+
+
+    @property
+    def config(self):
+        return self._config
 
 
     def _request(self, method, path, *args, **kwargs):

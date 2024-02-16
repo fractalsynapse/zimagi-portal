@@ -16,9 +16,9 @@ class Receiver(Agent('portal.receiver')):
         self.sleep(1)
 
     def _request_events(self):
-        for portal_name in self.get_portals():
-            for event in self.portal_list(portal_name, 'event', 'follow'):
-                self._process_event(portal_name, event['id'], event['type'], event['data'])
+        for portal in self.get_portals(events = True):
+            for event in self.portal_list(portal.name, 'event', 'follow'):
+                self._process_event(portal.name, event['id'], event['type'], event['data'])
 
     def receiver_retry(self):
         for package in self.listen('agent:portal:receiver:retry', state_key = 'portal_receiver'):

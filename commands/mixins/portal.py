@@ -10,8 +10,17 @@ import string
 
 class PortalCommandMixin(CommandMixin('portal')):
 
-    def get_portals(self, name_only = True):
-        return list(Portal.iterate(self, name_only))
+    def get_portals(self, **filters):
+        portals = []
+        for portal in Portal.iterate(self):
+            add_portal = True
+            for key, value in filters.items():
+                if key in portal.config and portal.config[key] != value:
+                    add_portal = False
+
+            if add_portal:
+                portals.append(portal)
+        return portals
 
     def get_portal(self, name = None):
         if not name:
