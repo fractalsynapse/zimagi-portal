@@ -39,6 +39,7 @@ class Receiver(Agent('portal.receiver')):
                         'event_id': event_id,
                         'event_fields': event_data,
                         'async_exec': True,
+                        'task_priority': 1,
                         'verbosity': self.verbosity
                     }
                 )
