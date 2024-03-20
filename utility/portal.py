@@ -48,11 +48,14 @@ class Portal(object):
 
     def _request(self, method, path, *args, **kwargs):
         wait_sec = 1
+
         while True:
             response = getattr(requests, method)(path, *args, **kwargs)
             if response.status_code != 429:
                 return response
-            time.sleep(min((wait_sec * 2), 300))
+
+            wait_sec = min((wait_sec * 2), 300)
+            time.sleep(wait_sec)
 
 
     def _get(self, path, params = None):
