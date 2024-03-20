@@ -50,9 +50,13 @@ class Portal(object):
         wait_sec = 1
 
         while True:
-            response = getattr(requests, method)(path, *args, **kwargs)
-            if response.status_code != 429:
-                return response
+            try:
+                response = getattr(requests, method)(path, *args, **kwargs)
+                if response.status_code != 429:
+                    return response
+            except Exception as e:
+                print(type(e))
+                print(e)
 
             wait_sec = min((wait_sec * 2), 300)
             time.sleep(wait_sec)
