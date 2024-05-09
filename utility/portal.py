@@ -69,6 +69,7 @@ class Portal(object):
         )
 
     def _post(self, path, data, files = None):
+        print(dump_json(data, indent = 2))
         return self._request('post',
             "{}/{}/".format(self.base_url, path),
             headers = self.headers,
@@ -77,6 +78,7 @@ class Portal(object):
         )
 
     def _put(self, path, data, files = None):
+        print(dump_json(data, indent = 2))
         return self._request('put',
             "{}/{}/".format(self.base_url, path),
             headers = self.headers,
@@ -85,6 +87,7 @@ class Portal(object):
         )
 
     def _patch(self, path, data, files = None):
+        print(dump_json(data, indent = 2))
         return self._request('patch',
             "{}/{}/".format(self.base_url, path),
             headers = self.headers,
