@@ -1,4 +1,5 @@
 from systems.commands.index import Agent
+from utility.display import print_exception_info
 
 
 class Receiver(Agent('portal.receiver')):
@@ -20,13 +21,16 @@ class Receiver(Agent('portal.receiver')):
             for portal in self.get_portals(events = True):
                 for event in self.portal_list(portal.name, 'event', 'follow'):
                     self._process_event(portal.name, event['id'], event['type'], event['data'])
-        except Exception as e:
-            self.warning("Requesting portal events failed with error: {}".format(e))
+        except Exception:
+            pass
 
     def receiver_retry(self):
-        for package in self.listen('agent:portal:receiver:retry', state_key = 'portal_receiver'):
-            event = package.message
-            self._process_event(event['portal'], event['id'], event['type'], event['data'])
+        try:
+            for package in self.listen('agent:portal:receiver:retry', state_key = 'portal_receiver'):
+                event = package.message
+                self._process_event(event['portal'], event['id'], event['type'], event['data'])
+        except Exception:
+            pass
 
 
     def _process_event(self, portal_name, event_id, event_type, event_data):
@@ -46,13 +50,16 @@ class Receiver(Agent('portal.receiver')):
                         'verbosity': self.verbosity
                     }
                 )
-            except Exception:
+            except Exception as e:
                 self.send('agent:portal:receiver:retry', {
                     'portal': portal_name,
                     'id': event_id,
                     'type': event_type,
                     'data': event_data
                 })
+                self.warning("Retrying portal event failed with error: {}".format(e))
+                print_exception_info(True)
+                raise e
 
             self.send('agent:portal:receiver:event', {
                 'portal': portal_name,
