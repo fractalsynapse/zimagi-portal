@@ -4,7 +4,9 @@ command:
             receiver:
                 base: agent
                 mixins: [portal]
+                worker_type: portal
 
             transmitter:
                 base: agent
                 mixins: [portal]
+                worker_type: portal
